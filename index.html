@@ -241,7 +241,7 @@
         .panel-btn:active {
             transform: translateX(8px) scale(0.98);
         }
-        /* 右侧诗歌面板 */
+        /* 右侧面板 */
         .right-panel {
             position: fixed;
             right: 40px;
@@ -265,13 +265,13 @@
             white-space: pre-line;
             z-index: 100;
             display: none;
-            white-space: normal; /* 允许自动换行 */
-            font-size: 1.1em;   /* 稍大的字号 */
-            line-height: 1.8;   /* 舒适的行高 */
-            padding: 25px;      /* 增加内边距 */
-            max-width: 300px;   /* 加宽面板 */
-            text-align: left;   /* 左对齐 */
-            transition: all 0.3s ease; /* 添加过渡效果 */
+            white-space: normal; 
+            font-size: 1.1em;
+            line-height: 1.8;
+            padding: 25px;
+            max-width: 300px;
+            text-align: left;
+            transition: all 0.3s ease;
         }
 
         /* 模态框遮罩层 */
@@ -286,6 +286,15 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+        }
+
+        /* 模态正文样式 */
+        .modal-body {
+            white-space: pre-line;
+            line-height: 1.6;
+            padding: 15px 0;
+            font-size: 1.1em;
+            color: #555;
         }
 
         /* 动画定义 */
@@ -367,13 +376,13 @@
 
     <!-- 左侧功能面板 -->
     <div class="left-panel">
-        <button class="panel-btn" data-target="intro">简介</button>
-        <button class="panel-btn" data-target="about">关于</button>
-        <button class="panel-btn" data-target="gallery">图集</button>
-        <button class="panel-btn" data-target="contact">联系</button>
+        <button class="panel-btn" data-target="intro">整体简介</button>
+        <button class="panel-btn" data-target="about">主要人物</button>
+        <button class="panel-btn" data-target="gallery">军力对比</button>
+        <button class="panel-btn" data-target="contact">关于我们</button>
     </div>
 
-    <!-- 右侧诗歌面板 -->
+    <!-- 右侧面板 -->
     <div class="right-panel" id="poetryPanel"></div>
 
     <!-- 模态对话框 -->
@@ -441,26 +450,41 @@
                 'image/萤宝3.jpg',
                 'image/萤宝4.jpg',
                 'image/萤宝5.jpg'],
-                poetry: ["床前明月光，\n疑是地上霜。\n举头望明月，\n低头思故乡。",
-                        "朝辞白帝彩云间，\n千里江陵一日还。\n两岸猿声啼不住，\n轻舟已过万重山。",
-                        "花间一壶酒，\n独酌无相亲。\n举杯邀明月，\n对影成三人。",
-                        "君不见黄河之水天上来，\n奔流到海不复回。",
-                        "长风破浪会有时，\n直挂云帆济沧海。",
-                        "安能摧眉折腰事权贵，\n使我不得开心颜！",
-                        "抽刀断水水更流，\n举杯消愁愁更愁。\n人生在世不称意，\n明朝散发弄扁舟。",
-                        "云想衣裳花想容，\n春风拂槛露华浓。\n若非群玉山头见，\n会向瑶台月下逢。",
-                        "孤帆远影碧空尽，\n唯见长江天际流。"]
+                poetry: ["床前明月光",
+                        "朝辞白帝彩云间",
+                        "花间一壶酒",
+                        "君不见黄河之水天上来",
+                        "长风破浪会有时",
+                        "安能摧眉折腰事权贵",
+                        "抽刀断水水更流",
+                        "云想衣裳花想容",
+                        "孤帆远影碧空尽"]
             }
         };
 
         // 弹窗内容配置
         const contentConfig = {
-            intro: { title: '项目说明', content: '通过滑动条探索生命的不同瞬间,每帧对应一句诗意阐释' },
-            about: { title: '关于作者', content: '用镜头捕捉生命诗意的探索者,在光影交错间寻找沉睡的真相' },
-            gallery: { title: '图集信息', content: '共收录10幅作品,拍摄时间：2020-2023' },
-            contact: { title: '联系方式', content: '电子邮箱：art@life.com,工作室地址：上海杨浦区' }
+            intro: { title: '整体简介', content: '此处填入整体简介相关内容\n。。。' },
+            about: { title: '主要人物', content: '此处填入主要人物相关内容\n。。。' },
+            gallery: { title: '军力对比', content: '此处填入军力对比相关内容\n。。。' },
+            contact: { title: '关于我们', content: '小组：12组\n组长：周星炜' }
         };
 
+        // 在脚本开头定义事件处理函数
+        function handleHotspotMouseEnter() {
+            const panel = document.getElementById('poetryPanel');
+            panel.textContent = this.dataset.description;
+            panel.style.display = 'block';
+            panel.style.opacity = '0.95';
+        }
+        function handleHotspotMouseLeave() {
+            const panel = document.getElementById('poetryPanel');
+            panel.style.opacity = '0';
+            setTimeout(() => {
+                panel.style.display = 'none';
+            }, 300);
+        }
+        
         // 初始化函数
         function init() {
             const returnBtn = document.getElementById('returnBtn');
@@ -476,22 +500,8 @@
             });
 
             document.querySelectorAll('.hotspot').forEach(hotspot => {
-            // 鼠标进入时显示面板
-                hotspot.addEventListener('mouseenter', function() {
-                    const panel = document.getElementById('poetryPanel');
-                    panel.textContent = this.dataset.description;
-                    panel.style.display = 'block';
-                    panel.style.opacity = '0.95'; // 提高不透明度
-                });
-
-                // 鼠标离开时延迟隐藏
-                hotspot.addEventListener('mouseleave', function() {
-                    const panel = document.getElementById('poetryPanel');
-                    panel.style.opacity = '0';
-                    setTimeout(() => {
-                        panel.style.display = 'none';
-                    }, 300); // 等待过渡动画完成
-                });
+                hotspot.addEventListener('mouseenter', handleHotspotMouseEnter);
+                hotspot.addEventListener('mouseleave', handleHotspotMouseLeave);
             });
 
             // 返回按钮事件
@@ -501,6 +511,10 @@
                 returnBtn.style.display = 'none';
                 document.getElementById('mainTitle').textContent = '这个是点击返回键后重新加载的主标题';
                 document.getElementById('poetryPanel').style.display = 'none';
+                document.querySelectorAll('.hotspot').forEach(hotspot => {
+                    hotspot.addEventListener('mouseenter', handleHotspotMouseEnter);
+                    hotspot.addEventListener('mouseleave', handleHotspotMouseLeave);
+                });
             });
 
             // 面板按钮事件
@@ -530,6 +544,11 @@
             const branch = branches[branchKey];
             const branchContent = document.querySelector('.branch-content');
             
+            document.querySelectorAll('.hotspot').forEach(hotspot => {
+                hotspot.removeEventListener('mouseenter', handleHotspotMouseEnter);
+                hotspot.removeEventListener('mouseleave', handleHotspotMouseLeave);
+            });
+
             // 切换显示内容
             document.querySelector('.main-page').style.display = 'none';
             branchContent.style.display = 'block';
@@ -541,6 +560,8 @@
             const slider = branchContent.querySelector('.branch-slider');
             const image = branchContent.querySelector('#branchImage');
             const poetryPanel = document.getElementById('poetryPanel');
+                poetryPanel.style.display = 'block';
+                poetryPanel.style.opacity = '1'; 
 
             slider.max = branch.images.length - 1;
 
@@ -564,6 +585,7 @@
             // 初始化显示第一项
             updateContent(0);
             slider.value = 0;
+
         }
 
         // 显示模态框
